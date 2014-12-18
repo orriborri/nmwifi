@@ -1,0 +1,54 @@
+function wifi() {
+    interface=$(iwconfig 2>/dev/null | head -n1 | cut -d' ' -f1)
+    if [[ "$1" == "scan" ]]; then
+        nmcli dev wifi
+    elif [[ "$1" != '' ]]; then
+        nmcli dev disconnect "$interface" 
+        echo trying to connect to "$1"
+        if [[ "$1" != '' ]]; then
+            nmcli dev wifi connect "$1" >/dev/null
+            exit_code=$?
+        elif [[ "$2" != "" ]]; then
+            nmcli dev wifi connect "$1" password "$2"
+            exit_code=$?
+        fi
+        if [[ $exit_code == "0" ]]; then
+            echo connect successfully to "$1"
+        else
+            echo connecting failed "$?"
+        fi
+    else
+         nmcli dev wifi 
+    fi
+
+}
+if [ -f ~/.zshrc.local ]; then
+    source ~/.zshrc.local
+fi
+#source $ZSH/oh-my-zsh.sh
+source $HOME/.zprezto/init.zsh
+source ~/src/z/z.sh
+
+alias vmx="startx -- -config xorg.vm"
+alias l="ll"
+alias netmenu="sudo wifi-menu -o"
+alias gx="git annex"
+alias gl="git pull"
+alias slp="systemctl suspend"
+alias ds="dirs -v"
+alias hc="herbstclient"
+alias startx="ssh-agent startx"
+alias nr="n r"
+alias nu="n u"
+alias v="~/src/v/v"
+alias xf="DISPLAY=:10"
+alias sctl="systemctl"
+alias jctl="journalctl"
+alias m="mosh"
+
+
+# irc alias
+for ((i = 0; i < 100; i++)); do
+    alias i$i="i $i"
+done
+
